@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="MissingDefaultResource">
+
+    <item
+        android:id="@+id/txn"
+        android:icon="@drawable/ic_show_chart_black_24dp"
+        android:title="Transactions"/>
+
+    <item
+        android:id="@+id/bids"
+        android:icon="@drawable/ic_gavel_black_24dp"
+        android:title="Bids" />
+
+    <item
+        android:id="@+id/asks"
+        android:icon="@drawable/ic_live_help_black_24dp"
+        android:title="Asks"/>
+
+</menu>
