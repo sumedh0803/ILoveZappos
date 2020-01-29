@@ -15,6 +15,8 @@ public class TransactionFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        int a;
         return inflater.inflate(R.layout.fragment_transactions,container,false);
+
     }
 }
