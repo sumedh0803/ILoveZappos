@@ -1,5 +1,5 @@
 # ILoveZappos
-##This is a Native Android Application, built as a part of the technical challenge of Zappos.com
+## This is a Native Android Application, built as a part of the technical challenge of Zappos.com
 <hr>
 The app has the following features:
 <ol>
@@ -10,5 +10,5 @@ The app has the following features:
   <li>Animation on Bids and Asks Activities.</li>
 <ol>
 
-###SCREENSHOTS and GIFS:
+### SCREENSHOTS and GIFS:
 
