@@ -1,9 +1,5 @@
 package com.example.ilovezappos.Utils;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.Collection;
 import java.util.List;
 
 public class Bids {

@@ -19,7 +19,7 @@ public class Transaction{
         return type;
     }
 
-    /*Comparator for sorting the list by Student Name*/
+    /*Comparator for sorting the list by TimeStamp*/
     public static Comparator<Entry> timeComparator = new Comparator<Entry>() {
 
         public int compare(Entry e1, Entry e2) {
@@ -29,8 +29,6 @@ public class Transaction{
             //ascending order
             return String.valueOf(time1).compareTo(String.valueOf(time2));
 
-            //descending order
-            //return StudentName2.compareTo(StudentName1);
         }};
 
 }

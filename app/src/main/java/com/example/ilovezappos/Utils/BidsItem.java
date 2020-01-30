@@ -1,7 +1,5 @@
 package com.example.ilovezappos.Utils;
 
-import android.widget.TextView;
-
 public class BidsItem {
     private String bids, value,amt;
 

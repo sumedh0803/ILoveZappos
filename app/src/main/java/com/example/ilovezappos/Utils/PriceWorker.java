@@ -39,7 +39,7 @@ public class PriceWorker extends Worker {
     @Override
     public Result doWork() {
 
-        FileInputStream fileInputStream = null;
+        FileInputStream fileInputStream;
         String priceFile = "";
         try {
             fileInputStream = context.openFileInput("price.txt");

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class AsksAdapter extends RecyclerView.Adapter<AsksAdapter.AsksViewHolder> {
     ArrayList<AsksItem> asksList;
     Context context;
-    private int lastPosition = -1;
+
     public AsksAdapter(ArrayList<AsksItem> asksList, Context context) {
         this.asksList = asksList;
         this.context = context;
