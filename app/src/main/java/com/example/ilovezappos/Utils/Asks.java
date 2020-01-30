@@ -4,8 +4,16 @@ import java.util.List;
 
 public class Asks {
     List<List<String>> asks;
+    String timestamp;
 
-    public List<List<String>> getAsks() {
+    public String getTimestamp()
+    {
+        return timestamp;
+    }
+
+
+    public List<List<String>> getAsks()
+    {
         return asks;
     }
 

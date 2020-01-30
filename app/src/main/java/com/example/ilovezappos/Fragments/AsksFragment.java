@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import com.example.ilovezappos.Utils.Bids;
 import com.example.ilovezappos.Utils.BidsAdapter;
 import com.example.ilovezappos.Utils.AsksItem;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class AsksFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private  RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.LayoutManager layoutManager;
+    private TextView timestamp;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,10 +60,16 @@ public class AsksFragment extends Fragment {
                     //System.out.println(bid.get(0)+":"+bid.get(1));
                 }
                 recyclerView = view.findViewById(R.id.recycler);
+                timestamp = view.findViewById(R.id.timestamp);
                 layoutManager = new LinearLayoutManager(getContext());
                 adapter = new AsksAdapter(asksData);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(adapter);
+
+                //System.out.println(response.body().getTimestamp());
+                String timest = response.body().getTimestamp();
+                java.util.Date time=new java.util.Date((Long.parseLong(timest)*1000));
+                timestamp.setText(time.toString());
 
 
             }
