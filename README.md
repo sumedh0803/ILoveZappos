@@ -10,7 +10,7 @@ The app has the following features:
   <li>Animation on Bids and Asks Activities.</li>
 <ol>
 
-## SCREENSHOTS and GIFS:
+## SCREENSHOTS:
 
 <img src ="https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/splashscreen.png" width=250>
 <img src ="https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/transaction.png" width = 250>
