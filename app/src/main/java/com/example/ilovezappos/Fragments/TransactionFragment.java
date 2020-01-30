@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.example.ilovezappos.Utils.PriceWorker;
 import com.example.ilovezappos.Utils.Transaction;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -59,8 +61,10 @@ public class TransactionFragment extends Fragment {
     private Button setalert, cancelalert;
     private EditText alertprice;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayout progress;
     @Nullable
     @Override
+    //Creates the fragment UI and returns the view to Main Activity
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_transactions, container, false);
@@ -68,6 +72,8 @@ public class TransactionFragment extends Fragment {
         bindViews(view);
         loadUiElements();
 
+        //When "set alert" button is clicked, a custom alert dialog is shown, which takes user input for the BTC rate, stores it in a file,
+        //and starts the PeriodicWorkRequest
         setalert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +115,7 @@ public class TransactionFragment extends Fragment {
 
             }
         });
-
+        //When "cancel" button is clicked, file containing price data is deleted and work is cancelled. Thus no alerts are sent to the user
         cancelalert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,8 +128,8 @@ public class TransactionFragment extends Fragment {
 
             }
         });
-
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
+        //For aesthetic purposes, the SwipeRefreshLayout will run for 2500ms and then get dismissed.
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -141,16 +147,22 @@ public class TransactionFragment extends Fragment {
 
     }
 
+    //Sets the alert by starting a PeriodicWorkRequest. Price alerts are sent every 1 hour.
     private void startWorker()
     {
         final WorkManager mWorkManager = WorkManager.getInstance();
         final PeriodicWorkRequest mRequest = new PeriodicWorkRequest.Builder(PriceWorker.class,1, TimeUnit.HOURS)
                 .build();
+        //Before enqueueing our request we need to cancel all previous requests, else multiple requests will
+        //be enqueued and multiple notifications will be sent to the user at irregular intervals.
         mWorkManager.cancelAllWork();
         mWorkManager.enqueue(mRequest);
     }
 
+    //Loads all the UI Elements like Graph, Price alert and current price.
     private void loadUiElements() {
+        lineChart.setVisibility(View.INVISIBLE);
+        progress.setVisibility(View.VISIBLE);
         boolean alertCreated = checkAlertCreated();
         if(alertCreated)
         {
@@ -200,6 +212,8 @@ public class TransactionFragment extends Fragment {
                 Toast.makeText(getContext(),"Error:"+t.getMessage(),Toast.LENGTH_LONG).show();
             }
         });
+        lineChart.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.INVISIBLE);
 
         BitstampTickerApi bitstampTickerApi = rf.create(BitstampTickerApi.class);
         Call<Price> tickerCall = bitstampTickerApi.getPrice();
@@ -224,11 +238,14 @@ public class TransactionFragment extends Fragment {
         });
     }
 
+    //Checks if price alert is set or not. if "price.txt" is present in the internal memory, the alert is set.
+    //Once the alert is removed, the file gets deleted and thus we can ensure that no alert is set.
     private boolean checkAlertCreated() {
         File f = new File(getContext().getFilesDir(),"price.txt");
         return f.exists();
     }
 
+    //Takes data and chart view and sets different properties of the chart.
     private void showGraph(ArrayList<Entry> data, LineChart chart)
     {
         LineDataSet lineDataSet = new LineDataSet(data,"BTC/USD");
@@ -256,12 +273,16 @@ public class TransactionFragment extends Fragment {
         dataSets.add(lineDataSet);
         LineData lineData = new LineData(dataSets);
         chart.setData(lineData);
-        chart.getXAxis().setLabelRotationAngle(10);
         chart.animateX(1500, Easing.Linear);
         chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+
+        Legend legend = chart.getLegend();
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         chart.invalidate();
     }
 
+    //Generated graph data from the responses received from the API. This data is later used by showGraph() method.
     private ArrayList<Entry> generateGraphData(Response<List<Transaction>> response)
     {
         ArrayList<Entry> datalocal = new ArrayList<Entry>();
@@ -297,6 +318,7 @@ public class TransactionFragment extends Fragment {
         return datalocal;
     }
 
+    //Binds all views in the UI
     private void bindViews(View view)
     {
         lineChart = view.findViewById(R.id.graph);
@@ -305,5 +327,6 @@ public class TransactionFragment extends Fragment {
         setalert = view.findViewById(R.id.setalert);
         cancelalert = view.findViewById(R.id.cancelAlert);
         swipeRefreshLayout = view.findViewById(R.id.swipe);
+        progress = view.findViewById(R.id.progress);
     }
 }

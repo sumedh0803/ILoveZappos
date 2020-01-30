@@ -69,7 +69,6 @@ public class PriceWorker extends Worker {
             public void onResponse(Call<Price> call, Response<Price> response) {
                 if(!response.isSuccessful())
                 {
-                    //Log.i(TAG, "onResponse: error");
                     return;
                 }
                 else

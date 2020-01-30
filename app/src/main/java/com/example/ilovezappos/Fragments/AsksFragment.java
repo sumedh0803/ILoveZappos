@@ -45,6 +45,7 @@ public class AsksFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     @Nullable
     @Override
+    //Creates the fragment UI and returns the view to Main Activity
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_asks,container,false);
         getActivity().setTitle("Asks");
@@ -68,6 +69,7 @@ public class AsksFragment extends Fragment {
         return view;
     }
 
+    //Loads all the UI Elements like recyclerView and timestamp.
     private void loadUiElements() {
         Retrofit rf = new Retrofit.Builder()
                 .baseUrl("https://www.bitstamp.net/")
@@ -93,6 +95,7 @@ public class AsksFragment extends Fragment {
         });
     }
 
+    //Takes data and prepares the recyclerView.
     private void prepareRecyclerView(ArrayList<AsksItem> asksData, Context context) {
         layoutManager = new LinearLayoutManager(context);
         adapter = new AsksAdapter(asksData,context);
@@ -106,6 +109,7 @@ public class AsksFragment extends Fragment {
 
     }
 
+    //Generated recyclerview data from the responses received from the API. This data is later used by prepareRecyclerView() method.
     private ArrayList<AsksItem> generateAsksData(Response<Asks> response) {
         ArrayList<AsksItem> asksDatalocal = new ArrayList<>();
         for(List<String> ask : response.body().getAsks())
@@ -117,6 +121,7 @@ public class AsksFragment extends Fragment {
         return asksDatalocal;
     }
 
+    //Binds all views in the UI
     private void bindViews(View view) {
         recyclerView = view.findViewById(R.id.recycler);
         timestamp = view.findViewById(R.id.timestamp);

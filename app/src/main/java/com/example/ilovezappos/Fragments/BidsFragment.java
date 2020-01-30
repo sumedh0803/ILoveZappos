@@ -42,12 +42,14 @@ public class BidsFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     @Nullable
     @Override
+    //Creates the fragment UI and returns the view to Main Activity
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_bids,container,false);
         getActivity().setTitle("Bids");
         bindViews(view);
         loadUiElements();
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
+        //For aesthetic purposes, the SwipeRefreshLayout will run for 2500ms and then get dismissed.
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -63,6 +65,7 @@ public class BidsFragment extends Fragment {
         return view;
     }
 
+    //Loads all the UI Elements like recyclerView and timestamp.
     private void loadUiElements() {
         Retrofit rf = new Retrofit.Builder()
                 .baseUrl("https://www.bitstamp.net/")
@@ -88,6 +91,7 @@ public class BidsFragment extends Fragment {
         });
     }
 
+    //Takes data and prepares the recyclerView.
     private void prepareRecyclerView(ArrayList<BidsItem> bidsData, Context context) {
         layoutManager = new LinearLayoutManager(context);
         adapter = new BidsAdapter(bidsData,context);
@@ -99,6 +103,7 @@ public class BidsFragment extends Fragment {
         recyclerView.scheduleLayoutAnimation();
     }
 
+    //Generated recyclerview data from the responses received from the API. This data is later used by prepareRecyclerView() method.
     private ArrayList<BidsItem> generateBidsData(Response<Bids> response) {
         ArrayList<BidsItem> bidsDataLocal = new ArrayList<>();
         for(List<String> bid : response.body().getBids())
@@ -110,6 +115,7 @@ public class BidsFragment extends Fragment {
         return bidsDataLocal;
     }
 
+    //Binds all views in the UI
     private void bindViews(View view) {
         recyclerView = view.findViewById(R.id.recycler);
         timestamp = view.findViewById(R.id.timestamp);
