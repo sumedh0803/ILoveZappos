@@ -34,7 +34,7 @@ public class BidsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_bids,container,false);
-
+        getActivity().setTitle("Bids");
         Retrofit rf = new Retrofit.Builder()
                 .baseUrl("https://www.bitstamp.net/")
                 .addConverterFactory(GsonConverterFactory.create())

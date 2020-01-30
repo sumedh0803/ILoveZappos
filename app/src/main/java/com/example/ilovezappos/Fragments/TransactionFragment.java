@@ -60,6 +60,7 @@ public class TransactionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_transactions, container, false);
+        getActivity().setTitle("Transactions");
         lineChart = view.findViewById(R.id.graph);
         currPrice = view.findViewById(R.id.currPrice);
         priceAlert = view.findViewById(R.id.priceAlert);
