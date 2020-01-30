@@ -24,6 +24,7 @@ import com.example.ilovezappos.R;
 import com.example.ilovezappos.Utils.Price;
 import com.example.ilovezappos.Utils.PriceWorker;
 import com.example.ilovezappos.Utils.Transaction;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -179,7 +180,7 @@ public class TransactionFragment extends Fragment {
                     lineChart.setData(lineData);
                     lineChart.getXAxis().setLabelRotationAngle(10);
                     //lineChart.getXAxis().setValueFormatter(new DateFormatter());
-                    lineChart.animate();
+                    lineChart.animateX(1500, Easing.Linear);
                     //lineChart.getXAxis().setGranularity(5f);
                     lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
                     lineChart.invalidate();
