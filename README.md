@@ -10,5 +10,5 @@ The app has the following features:
   <li>Animation on Bids and Asks Activities.</li>
 <ol>
 
-### SCREENSHOTS and GIFS:
+## SCREENSHOTS and GIFS:
 
