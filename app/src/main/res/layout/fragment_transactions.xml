@@ -45,8 +45,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHeight_default="percent"
         app:layout_constraintHeight_percent="0.6"
-        android:id="@+id/graph"
-        app:layout_goneMarginBottom="10dp"/>
+        android:id="@+id/graph" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card1"

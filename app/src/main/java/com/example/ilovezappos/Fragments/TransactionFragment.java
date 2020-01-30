@@ -251,23 +251,12 @@ public class TransactionFragment extends Fragment {
         LineDataSet lineDataSet = new LineDataSet(data,"BTC/USD");
         lineDataSet.setLineWidth(2);
 
-        float lastPrice = data.get(data.size()-1).getY();
-        float secondLastPrice = data.get(data.size()-2).getY();
-        if(lastPrice - secondLastPrice < 0.0f)
-        {
-            //price is rising
-            lineDataSet.setColors(Color.parseColor("#1b9405"));
-            lineDataSet.setDrawFilled(true);
-            lineDataSet.setFillColor(Color.parseColor("#9fdf9f"));
-            lineDataSet.setCircleColor(Color.parseColor("#1b9405"));
-        }
-        else
-        {
-            lineDataSet.setColors(Color.parseColor("#FF0000"));
-            lineDataSet.setDrawFilled(true);
-            lineDataSet.setFillColor(Color.parseColor("#ffb3b3"));
-            lineDataSet.setCircleColor(Color.parseColor("#ff0000"));
-        }
+        //price is rising
+        lineDataSet.setColors(Color.parseColor("#2979ff"));
+        lineDataSet.setDrawFilled(true);
+        lineDataSet.setFillColor(Color.parseColor("#b3cfff"));
+        lineDataSet.setCircleColor(Color.parseColor("#2979ff"));
+
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(lineDataSet);
