@@ -12,9 +12,9 @@ The app has the following features:
 
 ## SCREENSHOTS and GIFS:
 
-<img src ="https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/splashscreen.png" width=100>
-![Transaction](https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/transaction.png)
-![AlertBox](https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/setalert1.png)
-![Alertbox](https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/setalert2.png)
-![Asks](https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/asks.png)
-![Bids](https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/bids.png)
+<img src ="https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/splashscreen.png" width=250>
+<img src ="https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/transaction.png" width = 250>
+<img src ="https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/setalert1.png" width = 250>
+<img src ="https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/setalert2.png" width = 250>
+<img src ="https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/asks.png" width = 250>
+<img src ="https://github.com/sumedh0803/ILoveZappos/blob/master/app/Screeshots/bids.png" width = 250>
