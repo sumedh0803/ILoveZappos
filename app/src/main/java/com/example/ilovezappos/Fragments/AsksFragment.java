@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -62,9 +64,15 @@ public class AsksFragment extends Fragment {
                 recyclerView = view.findViewById(R.id.recycler);
                 timestamp = view.findViewById(R.id.timestamp);
                 layoutManager = new LinearLayoutManager(getContext());
-                adapter = new AsksAdapter(asksData);
+                adapter = new AsksAdapter(asksData,getContext());
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(adapter);
+
+                LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getContext(),R.anim.layout_animation);
+                recyclerView.setLayoutAnimation(animationController);
+                recyclerView.getAdapter().notifyDataSetChanged();
+                recyclerView.scheduleLayoutAnimation();
+
 
                 //System.out.println(response.body().getTimestamp());
                 String timest = response.body().getTimestamp();

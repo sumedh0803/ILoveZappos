@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -58,9 +60,13 @@ public class BidsFragment extends Fragment {
                 recyclerView = view.findViewById(R.id.recycler);
                 timestamp = view.findViewById(R.id.timestamp);
                 layoutManager = new LinearLayoutManager(getContext());
-                adapter = new BidsAdapter(bidsData);
+                adapter = new BidsAdapter(bidsData,getContext());
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(adapter);
+                LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getContext(),R.anim.layout_animation);
+                recyclerView.setLayoutAnimation(animationController);
+                recyclerView.getAdapter().notifyDataSetChanged();
+                recyclerView.scheduleLayoutAnimation();
 
                 String timest = response.body().getTimestamp();
                 java.util.Date time=new java.util.Date((Long.parseLong(timest)*1000));
