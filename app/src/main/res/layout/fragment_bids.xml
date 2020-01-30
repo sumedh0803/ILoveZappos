@@ -1,28 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/swipe">
+<LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="10dp"
+    android:paddingTop="5dp"
     android:paddingHorizontal="10dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
+        android:textSize="18sp"
+
         android:textAlignment="center"
         android:layout_gravity="center"
         android:id="@+id/timestamp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#c0c0c0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/timestamp"/>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:paddingHorizontal="5dp">
         <TextView
             android:id="@+id/value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Value"
+            android:textStyle="bold"
             android:textColor="#000000"
             android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -34,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity=""
             android:text="Amount"
+            android:textStyle="bold"
             android:textColor="#000000"
             android:textSize="16sp"
             app:layout_constraintLeft_toRightOf="@id/value"
@@ -46,6 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Bids"
+            android:textStyle="bold"
             android:textColor="@color/green"
             android:textSize="16sp"
             app:layout_constraintRight_toRightOf="parent"
@@ -60,3 +76,4 @@
         android:scrollbars="vertical"/>
 
 </LinearLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
