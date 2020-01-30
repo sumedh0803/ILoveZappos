@@ -1,18 +1,22 @@
 package com.example.ilovezappos.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ilovezappos.API.BitstampAsksApi;
 import com.example.ilovezappos.API.BitstampBidsApi;
@@ -38,55 +42,84 @@ public class AsksFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private TextView timestamp;
+    private SwipeRefreshLayout swipeRefreshLayout;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_asks,container,false);
         getActivity().setTitle("Asks");
+
+        bindViews(view);
+        loadUiElements();
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadUiElements();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                },2500);
+
+            }
+        });
+        return view;
+    }
+
+    private void loadUiElements() {
         Retrofit rf = new Retrofit.Builder()
                 .baseUrl("https://www.bitstamp.net/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
         BitstampAsksApi bitstampAsksApi = rf.create(BitstampAsksApi.class);
         Call<Asks> asksCall = bitstampAsksApi.getAsks();
         asksCall.enqueue(new Callback<Asks>() {
             @Override
             public void onResponse(Call<Asks> call, Response<Asks> response) {
+                ArrayList<AsksItem> asksData;
+                asksData = generateAsksData(response);
+                prepareRecyclerView(asksData,getContext());
 
-                ArrayList<AsksItem> asksData = new ArrayList<>();
-                for(List<String> ask : response.body().getAsks())
-                {
-                    Float temp = (Float.parseFloat(ask.get(0))*Float.parseFloat(ask.get(1)));
-                    String tempS = temp.toString();
-                    asksData.add(new AsksItem(ask.get(0),ask.get(1),tempS));
-                    //System.out.println(bid.get(0)+":"+bid.get(1));
-                }
-                recyclerView = view.findViewById(R.id.recycler);
-                timestamp = view.findViewById(R.id.timestamp);
-                layoutManager = new LinearLayoutManager(getContext());
-                adapter = new AsksAdapter(asksData,getContext());
-                recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setAdapter(adapter);
-
-                LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getContext(),R.anim.layout_animation);
-                recyclerView.setLayoutAnimation(animationController);
-                recyclerView.getAdapter().notifyDataSetChanged();
-                recyclerView.scheduleLayoutAnimation();
-
-
-                //System.out.println(response.body().getTimestamp());
-                String timest = response.body().getTimestamp();
-                java.util.Date time=new java.util.Date((Long.parseLong(timest)*1000));
+                java.util.Date time=new java.util.Date((Long.parseLong(response.body().getTimestamp())*1000));
                 timestamp.setText(time.toString());
-
-
             }
-
             @Override
             public void onFailure(Call<Asks> call, Throwable t) {
-                System.out.println(t.getMessage());
+                Toast.makeText(getContext(),"ERROR:"+t.getMessage(),Toast.LENGTH_LONG).show();
             }
         });
-        return view;
+    }
+
+    private void prepareRecyclerView(ArrayList<AsksItem> asksData, Context context) {
+        layoutManager = new LinearLayoutManager(context);
+        adapter = new AsksAdapter(asksData,context);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+
+        LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getContext(),R.anim.layout_animation);
+        recyclerView.setLayoutAnimation(animationController);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
+
+    }
+
+    private ArrayList<AsksItem> generateAsksData(Response<Asks> response) {
+        ArrayList<AsksItem> asksDatalocal = new ArrayList<>();
+        for(List<String> ask : response.body().getAsks())
+        {
+            Float temp = (Float.parseFloat(ask.get(0))*Float.parseFloat(ask.get(1)));
+            String tempS = temp.toString();
+            asksDatalocal.add(new AsksItem(ask.get(0),ask.get(1),tempS));
+        }
+        return asksDatalocal;
+    }
+
+    private void bindViews(View view) {
+        recyclerView = view.findViewById(R.id.recycler);
+        timestamp = view.findViewById(R.id.timestamp);
+        swipeRefreshLayout = view.findViewById(R.id.swipe);
     }
 }
