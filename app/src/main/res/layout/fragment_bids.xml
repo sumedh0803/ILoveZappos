@@ -37,14 +37,15 @@
             android:textSize="16sp"
             app:layout_constraintLeft_toRightOf="@id/value"
             app:layout_constraintRight_toLeftOf="@id/bids"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:justificationMode="inter_word"/>
 
         <TextView
             android:id="@+id/bids"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Bids"
-            android:textColor="#388E3C"
+            android:textColor="@color/green"
             android:textSize="16sp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

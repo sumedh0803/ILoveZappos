@@ -32,10 +32,9 @@ public class MainActivity extends AppCompatActivity {
                     Fragment selectedFrag = null;
                     switch (menuItem.getItemId())
                     {
-                        case R.id.txn: selectedFrag = new TransactionFragment();
-                            Toast.makeText(getApplicationContext(),"TXN",Toast.LENGTH_LONG).show(); break;
-                        case R.id.asks: selectedFrag = new AsksFragment();Toast.makeText(getApplicationContext(),"ASKS",Toast.LENGTH_LONG).show(); break;
-                        case R.id.bids: selectedFrag = new BidsFragment();Toast.makeText(getApplicationContext(),"BIDS",Toast.LENGTH_LONG).show(); break;
+                        case R.id.txn: selectedFrag = new TransactionFragment();break;
+                        case R.id.asks: selectedFrag = new AsksFragment(); break;
+                        case R.id.bids: selectedFrag = new BidsFragment(); break;
                     }
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFrag).commit();
                     return true;

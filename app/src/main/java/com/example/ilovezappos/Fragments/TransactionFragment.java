@@ -1,21 +1,28 @@
 package com.example.ilovezappos.Fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.example.ilovezappos.API.BitstampTickerApi;
 import com.example.ilovezappos.API.BitstampTransactionApi;
 import com.example.ilovezappos.R;
 import com.example.ilovezappos.Utils.Price;
+import com.example.ilovezappos.Utils.PriceWorker;
 import com.example.ilovezappos.Utils.Transaction;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -24,9 +31,17 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,20 +52,57 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class TransactionFragment extends Fragment {
     ArrayList<Entry> data = new ArrayList<Entry>();
     LineChart lineChart;
+    TextView currPrice,priceAlert;
+    Button setalert, cancelalert;
+    EditText alertprice;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_transactions, container, false);
+        lineChart = view.findViewById(R.id.graph);
+        currPrice = view.findViewById(R.id.currPrice);
+        priceAlert = view.findViewById(R.id.priceAlert);
+        setalert = view.findViewById(R.id.setalert);
+        cancelalert = view.findViewById(R.id.cancelAlert);
+        File f = new File(getContext().getFilesDir(),"price.txt");
+        if(f.exists())
+        {
+            System.out.println(f.exists());
+            FileInputStream fileInputStream = null;
+            String priceFile = "";
+            try {
+                fileInputStream = getContext().openFileInput("price.txt");
+                InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                priceFile = bufferedReader.readLine();
+                bufferedReader.close();
+                inputStreamReader.close();
+                priceAlert.setText(priceFile+" USD");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            System.out.println(f.exists());
+            priceAlert.setText("Alert not set");
+        }
         Retrofit rf = new Retrofit.Builder()
                 .baseUrl("https://www.bitstamp.net/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         lineChart = view.findViewById(R.id.graph);
+        currPrice = view.findViewById(R.id.currPrice);
+        priceAlert = view.findViewById(R.id.priceAlert);
+        setalert = view.findViewById(R.id.setalert);
+        cancelalert = view.findViewById(R.id.cancelAlert);
+
         BitstampTransactionApi bitstampTransactionApi = rf.create(BitstampTransactionApi.class);
         Call<List<Transaction>> transactionCall = bitstampTransactionApi.getTransactions();
-
         transactionCall.enqueue(new Callback<List<Transaction>>() {
             @Override
             public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
@@ -92,8 +144,6 @@ public class TransactionFragment extends Fragment {
                             i++;
                         }
                     }
-
-
 
                     LineDataSet lineDataSet = new LineDataSet(data,"BTC/USD");
                     lineDataSet.setLineWidth(2);
@@ -156,7 +206,7 @@ public class TransactionFragment extends Fragment {
                 }
                 else
                 {
-                    //tv1.setText("1 BTC = "+response.body().getLast()+" USD");
+                    currPrice.setText(response.body().getLast()+" USD");
                 }
             }
 
@@ -165,6 +215,67 @@ public class TransactionFragment extends Fragment {
 
             }
         });
+
+        setalert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+                View dialogbox = layoutInflater.inflate(R.layout.dialog_custom, null);
+                alertprice = dialogbox.findViewById(R.id.alertprice);
+                builder.setView(dialogbox);
+                builder.setTitle("Set Alert");
+                builder.setPositiveButton("Set", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getContext(),"Alert was set",Toast.LENGTH_LONG).show();
+
+                        System.out.println("LAYOUT ID: "+alertprice.getText().toString());
+                        String price = alertprice.getText().toString();
+                        priceAlert.setText(price+" USD");
+                        FileOutputStream fOut;
+                        try {
+                            fOut = getContext().openFileOutput("price.txt",getContext().MODE_PRIVATE);
+                            System.out.println("price is"+price);
+                            fOut.write(price.getBytes());
+                            fOut.close();
+                            final WorkManager mWorkManager = WorkManager.getInstance();
+                            final PeriodicWorkRequest mRequest = new PeriodicWorkRequest.Builder(PriceWorker.class,1, TimeUnit.HOURS)
+                                    .build();
+                            mWorkManager.cancelAllWork();
+                            mWorkManager.enqueue(mRequest);
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setCancelable(false);
+                builder.show();
+
+            }
+        });
+        cancelalert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final WorkManager mWorkManager = WorkManager.getInstance();
+                mWorkManager.cancelAllWork();
+                priceAlert.setText("Alert not set.");
+                File f = new File(getContext().getFilesDir(),"price.txt");
+                f.delete();
+
+            }
+        });
+
         return view;
 
     }
