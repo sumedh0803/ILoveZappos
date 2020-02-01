@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimary));
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new TransactionFragment()).commit();
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomnav);
